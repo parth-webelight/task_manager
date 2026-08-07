@@ -932,6 +932,7 @@ class ProfileController extends GetxController {
                 ),
               ),
 
+              /*
               SizedBox(height: 12.h),
 
               // Test Notification Button
@@ -957,6 +958,7 @@ class ProfileController extends GetxController {
                   ),
                 ),
               ),
+              */
 
               SizedBox(height: 10.h),
             ],
