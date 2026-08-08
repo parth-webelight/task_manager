@@ -299,7 +299,7 @@ class ProfileView extends GetView<ProfileController> {
                         isDark: isDark,
                         icon: Icons.shield_outlined,
                         title: lang?.privacyPolicy ?? 'Privacy & Policy',
-                        onTap: () {},
+                        onTap: controller.openPrivacyPolicyUrl,
                       ),
                       Divider(
                         height: 1,
@@ -313,6 +313,19 @@ class ProfileView extends GetView<ProfileController> {
                         title: lang?.logout ?? 'Logout',
                         isDestructive: true,
                         onTap: controller.confirmLogout,
+                      ),
+                      Divider(
+                        height: 1,
+                        color: isDark
+                            ? AppColors.darkDivider
+                            : AppColors.lightDivider,
+                      ),
+                      _buildProfileOptionTile(
+                        isDark: isDark,
+                        icon: Icons.delete_forever_outlined,
+                        title: 'Delete Account',
+                        isDestructive: true,
+                        onTap: controller.confirmDeleteAccount,
                       ),
                     ],
                   ),

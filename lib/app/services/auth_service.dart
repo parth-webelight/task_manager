@@ -65,7 +65,8 @@ class AuthService {
 
         // 3. Save User Document to Firestore with current local language preference
         try {
-          final currentLocalLang = await SessionManager().getSavedLanguageCode();
+          final currentLocalLang = await SessionManager()
+              .getSavedLanguageCode();
           await _firestore.collection('users').doc(user.uid).set({
             'uid': user.uid,
             'name': name.trim(),
@@ -143,13 +144,17 @@ class AuthService {
             }
 
             // Sync Firestore Language preference to local SharedPreferences and UI
-            if (data['language'] != null && data['language'].toString().isNotEmpty) {
+            if (data['language'] != null &&
+                data['language'].toString().isNotEmpty) {
               final remoteLang = data['language'].toString();
               await applyAndSaveLanguage(remoteLang);
             } else {
               // If Firestore user doc doesn't have language set, save local language to Firestore
               final localLang = await SessionManager().getSavedLanguageCode();
-              await updateUserLanguage(uid: refreshedUser.uid, languageCode: localLang);
+              await updateUserLanguage(
+                uid: refreshedUser.uid,
+                languageCode: localLang,
+              );
             }
           }
         } catch (e) {
@@ -200,7 +205,9 @@ class AuthService {
 
         if (firestoreLang != null && firestoreLang.isNotEmpty) {
           if (firestoreLang != localLang) {
-            debugPrint('Syncing language from Firestore ($firestoreLang) to local SharedPreferences');
+            debugPrint(
+              'Syncing language from Firestore ($firestoreLang) to local SharedPreferences',
+            );
             await applyAndSaveLanguage(firestoreLang);
           }
         } else {
@@ -328,6 +335,37 @@ class AuthService {
       debugPrint('Firebase Signout Warning: $e');
     }
     await SessionManager().onClearSession();
+  }
+
+  /// Delete User Account from Firebase Auth, Firestore User Document & Session
+  static Future<void> deleteAccount() async {
+    try {
+      final user = _auth.currentUser;
+      if (user != null) {
+        final uid = user.uid;
+
+        // 1. Delete Firestore user document
+        try {
+          await _firestore.collection('users').doc(uid).delete();
+        } catch (e) {
+          debugPrint('Warning deleting Firestore user document: $e');
+        }
+
+        // 2. Delete user from Firebase Auth
+        await user.delete();
+      }
+    } on FirebaseAuthException catch (e) {
+      debugPrint(
+        'Firebase Auth Delete Account Exception: [${e.code}] ${e.message}',
+      );
+      rethrow;
+    } catch (e) {
+      debugPrint('Unexpected Delete Account Error: $e');
+      rethrow;
+    } finally {
+      // 3. Clear local session
+      await SessionManager().onClearSession();
+    }
   }
 
   /// Send Password Reset Email

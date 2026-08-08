@@ -15,6 +15,7 @@ import 'package:task_manager/app/modules/home/home_controller.dart';
 import 'package:task_manager/app/routes/app_pages.dart';
 import 'package:task_manager/app/services/auth_service.dart';
 import 'package:task_manager/app/services/notification_service.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ProfileController extends GetxController {
   final userName = 'Task Master'.obs;
@@ -443,7 +444,9 @@ class ProfileController extends GetxController {
                 child: ElevatedButton(
                   onPressed: () async {
                     await themeController.setThemeMode(tempSelectedMode.value);
-                    await themeController.setColorScheme(tempSelectedScheme.value);
+                    await themeController.setColorScheme(
+                      tempSelectedScheme.value,
+                    );
                     Get.back();
                   },
                   style: ElevatedButton.styleFrom(
@@ -483,10 +486,14 @@ class ProfileController extends GetxController {
         decoration: BoxDecoration(
           color: isSelected
               ? primaryColor.withAlpha(30)
-              : (isDark ? AppColors.darkScaffoldBackground : AppColors.lightScaffoldBackground),
+              : (isDark
+                    ? AppColors.darkScaffoldBackground
+                    : AppColors.lightScaffoldBackground),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
-            color: isSelected ? primaryColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            color: isSelected
+                ? primaryColor
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: isSelected ? 1.8 : 1,
           ),
         ),
@@ -527,10 +534,14 @@ class ProfileController extends GetxController {
         decoration: BoxDecoration(
           color: isSelected
               ? accentColor.withAlpha(25)
-              : (isDark ? AppColors.darkScaffoldBackground : AppColors.lightScaffoldBackground),
+              : (isDark
+                    ? AppColors.darkScaffoldBackground
+                    : AppColors.lightScaffoldBackground),
           borderRadius: BorderRadius.circular(14.r),
           border: Border.all(
-            color: isSelected ? accentColor : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
+            color: isSelected
+                ? accentColor
+                : (isDark ? AppColors.darkBorder : AppColors.lightBorder),
             width: isSelected ? 1.8 : 1,
           ),
         ),
@@ -543,10 +554,7 @@ class ProfileController extends GetxController {
                 color: accentColor,
                 shape: BoxShape.circle,
                 boxShadow: [
-                  BoxShadow(
-                    color: accentColor.withAlpha(80),
-                    blurRadius: 6,
-                  ),
+                  BoxShadow(color: accentColor.withAlpha(80), blurRadius: 6),
                 ],
               ),
               child: isSelected
@@ -562,25 +570,35 @@ class ProfileController extends GetxController {
                     title,
                     style: AppTextStyles.bold(
                       fontSize: 14.sp,
-                      color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                      color: isDark
+                          ? AppColors.darkPrimaryText
+                          : AppColors.lightPrimaryText,
                     ),
                   ),
                   Text(
                     subtitle,
                     style: AppTextStyles.regular(
                       fontSize: 11.5.sp,
-                      color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                      color: isDark
+                          ? AppColors.darkSecondaryText
+                          : AppColors.lightSecondaryText,
                     ),
                   ),
                 ],
               ),
             ),
             if (isSelected)
-              Icon(Icons.radio_button_checked_rounded, color: accentColor, size: 20.r)
+              Icon(
+                Icons.radio_button_checked_rounded,
+                color: accentColor,
+                size: 20.r,
+              )
             else
               Icon(
                 Icons.radio_button_unchecked_rounded,
-                color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                color: isDark
+                    ? AppColors.darkSecondaryText
+                    : AppColors.lightSecondaryText,
                 size: 20.r,
               ),
           ],
@@ -597,6 +615,31 @@ class ProfileController extends GetxController {
           message: 'Logged out successfully',
         );
         Get.offAllNamed(Routes.LOGIN);
+      },
+    );
+  }
+
+  void confirmDeleteAccount() {
+    CommonDialog.showConfirmDialog(
+      title: 'Delete Account',
+      message: 'Are you sure you want to permanently delete your account?',
+      icon: Icons.delete_forever_rounded,
+      iconColor: AppColors.priorityHigh,
+      yesText: 'Delete',
+      noText: 'Cancel',
+      onYes: () async {
+        try {
+          await AuthService.deleteAccount();
+          Get.find<AlertMessageUtils>().showCustomSnackBar(
+            message: 'Your account has been deleted successfully.',
+          );
+          Get.offAllNamed(Routes.LOGIN);
+        } catch (e) {
+          debugPrint('Delete Account Error: $e');
+          Get.find<AlertMessageUtils>().showCustomSnackBar(
+            message: AuthService.getReadableErrorMessage(e),
+          );
+        }
       },
     );
   }
@@ -717,7 +760,7 @@ class ProfileController extends GetxController {
                       ),
                       Switch.adaptive(
                         value: tempNotificationsEnabled.value,
-                        activeColor: isDark
+                        activeTrackColor: isDark
                             ? AppColors.darkPrimary
                             : AppColors.lightPrimary,
                         onChanged: (val) {
@@ -847,7 +890,7 @@ class ProfileController extends GetxController {
                               ),
                               trailing: Switch.adaptive(
                                 value: tempSoundEnabled.value,
-                                activeColor: primaryColor,
+                                activeTrackColor: primaryColor,
                                 onChanged: (val) {
                                   tempSoundEnabled.value = val;
                                 },
@@ -879,7 +922,7 @@ class ProfileController extends GetxController {
                               ),
                               trailing: Switch.adaptive(
                                 value: tempVibrationEnabled.value,
-                                activeColor: primaryColor,
+                                activeTrackColor: primaryColor,
                                 onChanged: (val) {
                                   tempVibrationEnabled.value = val;
                                   if (val) {
@@ -904,16 +947,23 @@ class ProfileController extends GetxController {
                 height: 46.h,
                 child: ElevatedButton(
                   onPressed: () async {
-                    isNotificationsEnabled.value = tempNotificationsEnabled.value;
+                    isNotificationsEnabled.value =
+                        tempNotificationsEnabled.value;
                     reminderMinutes.value = tempReminderMinutes.value;
                     isSoundEnabled.value = tempSoundEnabled.value;
                     isVibrationEnabled.value = tempVibrationEnabled.value;
 
                     final notifService = NotificationService();
-                    await notifService.setNotificationsEnabled(tempNotificationsEnabled.value);
-                    await notifService.setReminderMinutes(tempReminderMinutes.value);
+                    await notifService.setNotificationsEnabled(
+                      tempNotificationsEnabled.value,
+                    );
+                    await notifService.setReminderMinutes(
+                      tempReminderMinutes.value,
+                    );
                     await notifService.setSoundEnabled(tempSoundEnabled.value);
-                    await notifService.setVibrationEnabled(tempVibrationEnabled.value);
+                    await notifService.setVibrationEnabled(
+                      tempVibrationEnabled.value,
+                    );
 
                     Get.back();
                     Get.find<AlertMessageUtils>().showCustomSnackBar(
@@ -959,7 +1009,6 @@ class ProfileController extends GetxController {
                 ),
               ),
               */
-
               SizedBox(height: 10.h),
             ],
           ),
@@ -969,19 +1018,23 @@ class ProfileController extends GetxController {
     );
   }
 
-
-
   /// Account Settings Options Bottom Sheet
   void showAccountSettingsBottomSheet() {
     final isDark = Get.isDarkMode;
-    final cardBg = isDark ? AppColors.darkCardBackground : AppColors.lightCardBackground;
-    final primaryColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final cardBg = isDark
+        ? AppColors.darkCardBackground
+        : AppColors.lightCardBackground;
+    final primaryColor = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
 
     Get.bottomSheet(
       Container(
         padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
-          color: isDark ? AppColors.darkScaffoldBackground : AppColors.lightScaffoldBackground,
+          color: isDark
+              ? AppColors.darkScaffoldBackground
+              : AppColors.lightScaffoldBackground,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
         child: Column(
@@ -1006,14 +1059,18 @@ class ProfileController extends GetxController {
                   'Account Settings',
                   style: AppTextStyles.bold(
                     fontSize: 20.sp,
-                    color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                    color: isDark
+                        ? AppColors.darkPrimaryText
+                        : AppColors.lightPrimaryText,
                   ),
                 ),
                 IconButton(
                   onPressed: () => Get.back(),
                   icon: Icon(
                     Icons.close_rounded,
-                    color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
                   ),
                 ),
               ],
@@ -1044,26 +1101,34 @@ class ProfileController extends GetxController {
                         'Edit Name',
                         style: AppTextStyles.medium(
                           fontSize: 15.sp,
-                          color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                          color: isDark
+                              ? AppColors.darkPrimaryText
+                              : AppColors.lightPrimaryText,
                         ),
                       ),
                       subtitle: Text(
                         userName.value,
                         style: AppTextStyles.regular(
                           fontSize: 13.sp,
-                          color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                          color: isDark
+                              ? AppColors.darkSecondaryText
+                              : AppColors.lightSecondaryText,
                         ),
                       ),
                       trailing: Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 14.r,
-                        color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                        color: isDark
+                            ? AppColors.darkSecondaryText
+                            : AppColors.lightSecondaryText,
                       ),
                     ),
                   ),
                   Divider(
                     height: 1,
-                    color: isDark ? AppColors.darkDivider : AppColors.lightDivider,
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
                   ),
                   ListTile(
                     onTap: () {
@@ -1079,20 +1144,26 @@ class ProfileController extends GetxController {
                       'Change Password',
                       style: AppTextStyles.medium(
                         fontSize: 15.sp,
-                        color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                        color: isDark
+                            ? AppColors.darkPrimaryText
+                            : AppColors.lightPrimaryText,
                       ),
                     ),
                     subtitle: Text(
                       'Update your account password',
                       style: AppTextStyles.regular(
                         fontSize: 13.sp,
-                        color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                        color: isDark
+                            ? AppColors.darkSecondaryText
+                            : AppColors.lightSecondaryText,
                       ),
                     ),
                     trailing: Icon(
                       Icons.arrow_forward_ios_rounded,
                       size: 14.r,
-                      color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                      color: isDark
+                          ? AppColors.darkSecondaryText
+                          : AppColors.lightSecondaryText,
                     ),
                   ),
                 ],
@@ -1114,8 +1185,12 @@ class ProfileController extends GetxController {
 
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        backgroundColor: isDark ? AppColors.darkCardBackground : AppColors.lightCardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        backgroundColor: isDark
+            ? AppColors.darkCardBackground
+            : AppColors.lightCardBackground,
         child: Padding(
           padding: EdgeInsets.all(20.r),
           child: Column(
@@ -1126,7 +1201,9 @@ class ProfileController extends GetxController {
                 'Edit Name',
                 style: AppTextStyles.bold(
                   fontSize: 18.sp,
-                  color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                  color: isDark
+                      ? AppColors.darkPrimaryText
+                      : AppColors.lightPrimaryText,
                 ),
               ),
               SizedBox(height: 14.h),
@@ -1136,7 +1213,9 @@ class ProfileController extends GetxController {
                 maxLength: 40,
                 style: AppTextStyles.medium(
                   fontSize: 14.sp,
-                  color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                  color: isDark
+                      ? AppColors.darkPrimaryText
+                      : AppColors.lightPrimaryText,
                 ),
                 decoration: InputDecoration(
                   labelText: 'Full Name',
@@ -1157,7 +1236,9 @@ class ProfileController extends GetxController {
                       'Cancel',
                       style: AppTextStyles.medium(
                         fontSize: 14.sp,
-                        color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                        color: isDark
+                            ? AppColors.darkSecondaryText
+                            : AppColors.lightSecondaryText,
                       ),
                     ),
                   ),
@@ -1185,8 +1266,12 @@ class ProfileController extends GetxController {
                       // 2. Network & Firestore update in background
                       try {
                         final user = AuthService.currentUser;
-                        String uid = user?.uid ?? await SessionManager().getUserID();
-                        await AuthService.updateUserName(uid: uid, name: newName);
+                        String uid =
+                            user?.uid ?? await SessionManager().getUserID();
+                        await AuthService.updateUserName(
+                          uid: uid,
+                          name: newName,
+                        );
 
                         alerts.showSuccessSnackBar(
                           title: 'Name Updated',
@@ -1205,14 +1290,19 @@ class ProfileController extends GetxController {
                       }
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                      backgroundColor: isDark
+                          ? AppColors.darkPrimary
+                          : AppColors.lightPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.r),
                       ),
                     ),
                     child: Text(
                       'Save',
-                      style: AppTextStyles.bold(fontSize: 14.sp, color: Colors.white),
+                      style: AppTextStyles.bold(
+                        fontSize: 14.sp,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ],
@@ -1237,8 +1327,12 @@ class ProfileController extends GetxController {
 
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.r)),
-        backgroundColor: isDark ? AppColors.darkCardBackground : AppColors.lightCardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20.r),
+        ),
+        backgroundColor: isDark
+            ? AppColors.darkCardBackground
+            : AppColors.lightCardBackground,
         child: Padding(
           padding: EdgeInsets.all(20.r),
           child: SingleChildScrollView(
@@ -1250,7 +1344,9 @@ class ProfileController extends GetxController {
                   'Change Password',
                   style: AppTextStyles.bold(
                     fontSize: 18.sp,
-                    color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                    color: isDark
+                        ? AppColors.darkPrimaryText
+                        : AppColors.lightPrimaryText,
                   ),
                 ),
                 SizedBox(height: 14.h),
@@ -1260,7 +1356,9 @@ class ProfileController extends GetxController {
                     obscureText: !isCurrentPasswordVisible.value,
                     style: AppTextStyles.medium(
                       fontSize: 14.sp,
-                      color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                      color: isDark
+                          ? AppColors.darkPrimaryText
+                          : AppColors.lightPrimaryText,
                     ),
                     decoration: InputDecoration(
                       labelText: 'Current Password',
@@ -1290,7 +1388,8 @@ class ProfileController extends GetxController {
                       if (email.isEmpty) {
                         alerts.showErrorSnackBar(
                           title: 'Email Not Found',
-                          message: 'User email is not available to send reset link.',
+                          message:
+                              'User email is not available to send reset link.',
                         );
                         return;
                       }
@@ -1307,7 +1406,10 @@ class ProfileController extends GetxController {
                       }
                     },
                     style: TextButton.styleFrom(
-                      padding: EdgeInsets.symmetric(vertical: 4.h, horizontal: 0),
+                      padding: EdgeInsets.symmetric(
+                        vertical: 4.h,
+                        horizontal: 0,
+                      ),
                       minimumSize: Size.zero,
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
@@ -1315,7 +1417,9 @@ class ProfileController extends GetxController {
                       'Forgot current password?',
                       style: AppTextStyles.medium(
                         fontSize: 12.sp,
-                        color: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        color: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                       ),
                     ),
                   ),
@@ -1327,7 +1431,9 @@ class ProfileController extends GetxController {
                     obscureText: !isNewPasswordVisible.value,
                     style: AppTextStyles.medium(
                       fontSize: 14.sp,
-                      color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                      color: isDark
+                          ? AppColors.darkPrimaryText
+                          : AppColors.lightPrimaryText,
                     ),
                     decoration: InputDecoration(
                       labelText: 'New Password',
@@ -1354,7 +1460,9 @@ class ProfileController extends GetxController {
                     obscureText: !isConfirmPasswordVisible.value,
                     style: AppTextStyles.medium(
                       fontSize: 14.sp,
-                      color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                      color: isDark
+                          ? AppColors.darkPrimaryText
+                          : AppColors.lightPrimaryText,
                     ),
                     decoration: InputDecoration(
                       labelText: 'Confirm Password',
@@ -1384,16 +1492,20 @@ class ProfileController extends GetxController {
                         'Cancel',
                         style: AppTextStyles.medium(
                           fontSize: 14.sp,
-                          color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                          color: isDark
+                              ? AppColors.darkSecondaryText
+                              : AppColors.lightSecondaryText,
                         ),
                       ),
                     ),
                     SizedBox(width: 8.w),
                     ElevatedButton(
                       onPressed: () async {
-                        final currentPass = currentPasswordController.text.trim();
+                        final currentPass = currentPasswordController.text
+                            .trim();
                         final newPass = newPasswordController.text.trim();
-                        final confirmPass = confirmPasswordController.text.trim();
+                        final confirmPass = confirmPasswordController.text
+                            .trim();
 
                         if (currentPass.isEmpty) {
                           alerts.showErrorSnackBar(
@@ -1427,12 +1539,18 @@ class ProfileController extends GetxController {
                           );
                           alerts.showSuccessSnackBar(
                             title: 'Password Updated',
-                            message: 'Your password has been changed successfully.',
+                            message:
+                                'Your password has been changed successfully.',
                           );
                         } catch (e, stackTrace) {
-                          debugPrint('[ProfileController] Change Password Error: $e');
-                          debugPrint('[ProfileController] StackTrace: $stackTrace');
-                          final readableMsg = AuthService.getReadableErrorMessage(e);
+                          debugPrint(
+                            '[ProfileController] Change Password Error: $e',
+                          );
+                          debugPrint(
+                            '[ProfileController] StackTrace: $stackTrace',
+                          );
+                          final readableMsg =
+                              AuthService.getReadableErrorMessage(e);
                           alerts.showErrorSnackBar(
                             title: 'Update Failed',
                             message: readableMsg,
@@ -1440,14 +1558,19 @@ class ProfileController extends GetxController {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: isDark ? AppColors.darkPrimary : AppColors.lightPrimary,
+                        backgroundColor: isDark
+                            ? AppColors.darkPrimary
+                            : AppColors.lightPrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10.r),
                         ),
                       ),
                       child: Text(
                         'Update',
-                        style: AppTextStyles.bold(fontSize: 14.sp, color: Colors.white),
+                        style: AppTextStyles.bold(
+                          fontSize: 14.sp,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -1463,13 +1586,19 @@ class ProfileController extends GetxController {
   /// Show Detailed Guidance Dialog when Password Reset Email is Sent
   void showPasswordResetSentDialog(String email) {
     final isDark = Get.isDarkMode;
-    final primaryColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+    final primaryColor = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
     final alerts = Get.find<AlertMessageUtils>();
 
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24.r)),
-        backgroundColor: isDark ? AppColors.darkCardBackground : AppColors.lightCardBackground,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24.r),
+        ),
+        backgroundColor: isDark
+            ? AppColors.darkCardBackground
+            : AppColors.lightCardBackground,
         child: Padding(
           padding: EdgeInsets.all(22.r),
           child: Column(
@@ -1497,7 +1626,9 @@ class ProfileController extends GetxController {
                 textAlign: TextAlign.center,
                 style: AppTextStyles.bold(
                   fontSize: 18.sp,
-                  color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                  color: isDark
+                      ? AppColors.darkPrimaryText
+                      : AppColors.lightPrimaryText,
                 ),
               ),
               SizedBox(height: 10.h),
@@ -1508,10 +1639,15 @@ class ProfileController extends GetxController {
                 text: TextSpan(
                   style: AppTextStyles.regular(
                     fontSize: 13.sp,
-                    color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
                   ),
                   children: [
-                    const TextSpan(text: 'We have sent a reset password link to your email:\n'),
+                    const TextSpan(
+                      text:
+                          'We have sent a reset password link to your email:\n',
+                    ),
                     TextSpan(
                       text: email,
                       style: AppTextStyles.bold(
@@ -1533,7 +1669,9 @@ class ProfileController extends GetxController {
                       : AppColors.lightScaffoldBackground,
                   borderRadius: BorderRadius.circular(16.r),
                   border: Border.all(
-                    color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
                   ),
                 ),
                 child: Column(
@@ -1603,7 +1741,9 @@ class ProfileController extends GetxController {
                   'Didn\'t receive email? Resend',
                   style: AppTextStyles.medium(
                     fontSize: 13.sp,
-                    color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
                   ),
                 ),
               ),
@@ -1627,7 +1767,11 @@ class ProfileController extends GetxController {
         Icon(
           icon,
           size: 18.r,
-          color: isHighlight ? activeColor : (isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText),
+          color: isHighlight
+              ? activeColor
+              : (isDark
+                    ? AppColors.darkSecondaryText
+                    : AppColors.lightSecondaryText),
         ),
         SizedBox(width: 10.w),
         Expanded(
@@ -1636,12 +1780,247 @@ class ProfileController extends GetxController {
             style: isHighlight
                 ? AppTextStyles.bold(
                     fontSize: 12.sp,
-                    color: isDark ? AppColors.darkPrimaryText : AppColors.lightPrimaryText,
+                    color: isDark
+                        ? AppColors.darkPrimaryText
+                        : AppColors.lightPrimaryText,
                   )
                 : AppTextStyles.regular(
                     fontSize: 12.sp,
-                    color: isDark ? AppColors.darkSecondaryText : AppColors.lightSecondaryText,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
                   ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Open external Privacy Policy web link (Netlify)
+  Future<void> openPrivacyPolicyUrl() async {
+    final Uri url = Uri.parse('https://meet-vaghela-2003.netlify.app/');
+    try {
+      if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+        throw 'Could not launch $url';
+      }
+    } catch (e) {
+      debugPrint('Error launching Privacy Policy URL: $e');
+      Get.find<AlertMessageUtils>().showCustomSnackBar(
+        message: 'Could not open Privacy Policy link.',
+      );
+    }
+  }
+
+  /// Open Privacy & Policy Bottom Sheet
+  void showPrivacyPolicyBottomSheet() {
+    final isDark = Get.isDarkMode;
+    final primaryColor = isDark
+        ? AppColors.darkPrimary
+        : AppColors.lightPrimary;
+
+    Get.bottomSheet(
+      Container(
+        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+        decoration: BoxDecoration(
+          color: isDark
+              ? AppColors.darkCardBackground
+              : AppColors.lightCardBackground,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+          border: Border.all(
+            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
+          ),
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: Container(
+                  width: 44.w,
+                  height: 4.h,
+                  decoration: BoxDecoration(
+                    color: isDark
+                        ? AppColors.darkDivider
+                        : AppColors.lightDivider,
+                    borderRadius: BorderRadius.circular(2.r),
+                  ),
+                ),
+              ),
+              SizedBox(height: 18.h),
+
+              Row(
+                children: [
+                  Icon(Icons.shield_outlined, color: primaryColor, size: 24.r),
+                  SizedBox(width: 10.w),
+                  Text(
+                    'Privacy & Security Policy',
+                    style: AppTextStyles.bold(
+                      fontSize: 18.sp,
+                      color: isDark
+                          ? AppColors.darkPrimaryText
+                          : AppColors.lightPrimaryText,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 14.h),
+
+              Text(
+                'Task Manager values your privacy. We are fully compliant with Google Play Store Safety Standards.',
+                style: AppTextStyles.regular(
+                  fontSize: 13.sp,
+                  color: isDark
+                      ? AppColors.darkSecondaryText
+                      : AppColors.lightSecondaryText,
+                ),
+              ),
+              SizedBox(height: 14.h),
+
+              Container(
+                padding: EdgeInsets.all(14.r),
+                decoration: BoxDecoration(
+                  color: isDark
+                      ? AppColors.darkScaffoldBackground
+                      : AppColors.lightScaffoldBackground,
+                  borderRadius: BorderRadius.circular(16.r),
+                  border: Border.all(
+                    color: isDark
+                        ? AppColors.darkBorder
+                        : AppColors.lightBorder,
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    _buildPrivacySummaryRow(
+                      icon: Icons.lock_outline_rounded,
+                      title: 'Data Protection',
+                      desc:
+                          'Your tasks and personal info are encrypted in transit and at rest.',
+                      isDark: isDark,
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildPrivacySummaryRow(
+                      icon: Icons.do_not_disturb_on_outlined,
+                      title: 'No Data Selling',
+                      desc:
+                          'We never sell, rent, or share your personal data with third parties.',
+                      isDark: isDark,
+                    ),
+                    SizedBox(height: 12.h),
+                    _buildPrivacySummaryRow(
+                      icon: Icons.delete_outline_rounded,
+                      title: 'Full User Control',
+                      desc:
+                          'You can delete your tasks or account anytime from your Profile screen.',
+                      isDark: isDark,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              // Button to open Netlify Web Page directly
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () {
+                    Get.back();
+                    openPrivacyPolicyUrl();
+                  },
+                  icon: Icon(
+                    Icons.open_in_browser_rounded,
+                    color: primaryColor,
+                    size: 18.r,
+                  ),
+                  label: Text(
+                    'Open Online Privacy Policy Webpage',
+                    style: AppTextStyles.bold(
+                      fontSize: 13.sp,
+                      color: primaryColor,
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 12.h),
+                    side: BorderSide(color: primaryColor),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: 10.h),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => Get.back(),
+                  icon: const Icon(
+                    Icons.check_circle_outline_rounded,
+                    color: Colors.white,
+                  ),
+                  label: Text(
+                    'Close & Accept',
+                    style: AppTextStyles.bold(
+                      fontSize: 15.sp,
+                      color: Colors.white,
+                    ),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primaryColor,
+                    padding: EdgeInsets.symmetric(vertical: 13.h),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14.r),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      isScrollControlled: true,
+    );
+  }
+
+  Widget _buildPrivacySummaryRow({
+    required IconData icon,
+    required String title,
+    required String desc,
+    required bool isDark,
+  }) {
+    final activeColor = isDark ? AppColors.darkPrimary : AppColors.lightPrimary;
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(icon, color: activeColor, size: 20.r),
+        SizedBox(width: 10.w),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: AppTextStyles.bold(
+                  fontSize: 13.sp,
+                  color: isDark
+                      ? AppColors.darkPrimaryText
+                      : AppColors.lightPrimaryText,
+                ),
+              ),
+              SizedBox(height: 2.h),
+              Text(
+                desc,
+                style: AppTextStyles.regular(
+                  fontSize: 11.5.sp,
+                  color: isDark
+                      ? AppColors.darkSecondaryText
+                      : AppColors.lightSecondaryText,
+                ),
+              ),
+            ],
           ),
         ),
       ],

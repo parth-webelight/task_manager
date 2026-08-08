@@ -385,7 +385,7 @@ class HomeView extends GetView<HomeController> {
                               delay: const Duration(milliseconds: 50),
                               duration: const Duration(milliseconds: 200),
                               child: SizedBox(
-                                height: 38.h,
+                                height: 42.h,
                                 child: Obx(
                                   () => ListView.separated(
                                     controller:

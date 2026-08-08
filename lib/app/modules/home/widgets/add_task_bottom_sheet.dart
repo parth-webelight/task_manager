@@ -230,7 +230,6 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           createdAt: DateTime.now(),
         );
         final createdTask = await TaskService.addTask(newTask);
-        await NotificationService().showInstantTaskCreatedNotification(createdTask);
         await NotificationService().scheduleTaskNotifications(createdTask);
         alerts.showSuccessSnackBar(
           title: 'Task Created',

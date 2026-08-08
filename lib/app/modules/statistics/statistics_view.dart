@@ -97,7 +97,7 @@ class StatisticsView extends GetView<StatisticsController> {
         physics: const NeverScrollableScrollPhysics(),
         crossAxisSpacing: 14.w,
         mainAxisSpacing: 14.h,
-        childAspectRatio: 1.5,
+        childAspectRatio: 1.35,
         children: [
           // Total Tasks
           _buildKpiCard(

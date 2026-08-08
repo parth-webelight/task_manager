@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../../../../main.dart';
+import 'package:task_manager/main.dart';
 
 class SessionManager {
-  static String auth_token = "auth_token";
+  static String authToken = "auth_token";
   static String isLogin = "isLogin";
   static String isVerified = "isVerified";
   static String userID = "userID";
@@ -179,6 +179,8 @@ class SessionManager {
 
   void changeLanguage(BuildContext context, String selectedLanguageCode) async {
     var locale = await setLocale(selectedLanguageCode);
-    MyApp.setLocale(context, locale);
+    if (context.mounted) {
+      MyApp.setLocale(context, locale);
+    }
   }
 }
