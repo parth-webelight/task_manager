@@ -6,14 +6,26 @@
 -keep class com.dexterous.flutterlocalnotifications.ForegroundService { *; }
 -dontwarn com.dexterous.flutterlocalnotifications.**
 
+# Gson & Generic Type Preservation (Critical for R8 / Release Build Notifications)
+-keepattributes Signature
+-keepattributes *Annotation*
+-keepattributes EnclosingMethod
+-keepattributes InnerClasses
+-keep class com.google.gson.** { *; }
+-keep class com.google.gson.reflect.TypeToken { *; }
+-keep class * extends com.google.gson.reflect.TypeToken
+-keepclassmembers class * extends com.google.gson.reflect.TypeToken {
+    <init>(...);
+}
+
 # TimeZone & ThreeTen
 -keep class com.jakewharton.threetenabp.** { *; }
 -keep class org.threeten.bp.** { *; }
+-keep class timezone.** { *; }
 -dontwarn org.threeten.bp.**
+-dontwarn timezone.**
 
-# Gson / Firebase (if obfuscated)
--keepattributes *Annotation*
--keepattributes Signature
+# Javascript Interface & Annotations
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
@@ -24,6 +36,10 @@
 -keep class io.flutter.util.** { *; }
 -keep class io.flutter.view.** { *; }
 -keep class io.flutter.embedding.** { *; }
+
+# AndroidX Core & Broadcast Receivers
+-keep class androidx.core.app.CoreComponentFactory { *; }
+-keep class androidx.work.** { *; }
 
 # Google Play Core & Deferred Components (R8 Fix)
 -dontwarn com.google.android.play.core.**

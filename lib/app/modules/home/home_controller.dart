@@ -527,7 +527,6 @@ class HomeController extends GetxController {
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: isDark
               ? AppColors.darkCardBackground
@@ -537,98 +536,104 @@ class HomeController extends GetxController {
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 44.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkDivider
-                      : AppColors.lightDivider,
-                  borderRadius: BorderRadius.circular(2.r),
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 44.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider,
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            SizedBox(height: 18.h),
-            Text(
-              'App Theme',
-              style: AppTextStyles.bold(
-                fontSize: 18.sp,
-                color: isDark
-                    ? AppColors.darkPrimaryText
-                    : AppColors.lightPrimaryText,
-              ),
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              'Choose your preferred appearance mode',
-              style: AppTextStyles.regular(
-                fontSize: 13.sp,
-                color: isDark
-                    ? AppColors.darkSecondaryText
-                    : AppColors.lightSecondaryText,
-              ),
-            ),
-            SizedBox(height: 20.h),
+                SizedBox(height: 18.h),
+                Text(
+                  'App Theme',
+                  style: AppTextStyles.bold(
+                    fontSize: 18.sp,
+                    color: isDark
+                        ? AppColors.darkPrimaryText
+                        : AppColors.lightPrimaryText,
+                  ),
+                ),
+                SizedBox(height: 6.h),
+                Text(
+                  'Choose your preferred appearance mode',
+                  style: AppTextStyles.regular(
+                    fontSize: 13.sp,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
+                  ),
+                ),
+                SizedBox(height: 20.h),
 
-            // 1. Light Mode Option
-            Obx(
-              () => _buildThemeTile(
-                title: 'Light Mode',
-                subtitle: 'Always use clean light theme',
-                icon: Icons.light_mode_rounded,
-                mode: ThemeMode.light,
-                currentMode: themeController.themeMode,
-                isDark: isDark,
-                onTap: () {
-                  themeController.setThemeMode(ThemeMode.light);
-                  Get.back();
-                },
-              ),
+                // 1. Light Mode Option
+                Obx(
+                  () => _buildThemeTile(
+                    title: 'Light Mode',
+                    subtitle: 'Always use clean light theme',
+                    icon: Icons.light_mode_rounded,
+                    mode: ThemeMode.light,
+                    currentMode: themeController.themeMode,
+                    isDark: isDark,
+                    onTap: () {
+                      themeController.setThemeMode(ThemeMode.light);
+                      Get.back();
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                // 2. Dark Mode Option
+                Obx(
+                  () => _buildThemeTile(
+                    title: 'Dark Mode',
+                    subtitle: 'Always use sleek dark theme',
+                    icon: Icons.dark_mode_rounded,
+                    mode: ThemeMode.dark,
+                    currentMode: themeController.themeMode,
+                    isDark: isDark,
+                    onTap: () {
+                      themeController.setThemeMode(ThemeMode.dark);
+                      Get.back();
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+
+                // 3. System Default Option
+                Obx(
+                  () => _buildThemeTile(
+                    title: 'System Default',
+                    subtitle: 'Match system device settings automatically',
+                    icon: Icons.settings_brightness_rounded,
+                    mode: ThemeMode.system,
+                    currentMode: themeController.themeMode,
+                    isDark: isDark,
+                    onTap: () {
+                      themeController.setThemeMode(ThemeMode.system);
+                      Get.back();
+                    },
+                  ),
+                ),
+
+                SizedBox(height: 10.h),
+              ],
             ),
-
-            SizedBox(height: 10.h),
-
-            // 2. Dark Mode Option
-            Obx(
-              () => _buildThemeTile(
-                title: 'Dark Mode',
-                subtitle: 'Always use sleek dark theme',
-                icon: Icons.dark_mode_rounded,
-                mode: ThemeMode.dark,
-                currentMode: themeController.themeMode,
-                isDark: isDark,
-                onTap: () {
-                  themeController.setThemeMode(ThemeMode.dark);
-                  Get.back();
-                },
-              ),
-            ),
-
-            SizedBox(height: 10.h),
-
-            // 3. System Default Option
-            Obx(
-              () => _buildThemeTile(
-                title: 'System Default',
-                subtitle: 'Match system device settings automatically',
-                icon: Icons.settings_brightness_rounded,
-                mode: ThemeMode.system,
-                currentMode: themeController.themeMode,
-                isDark: isDark,
-                onTap: () {
-                  themeController.setThemeMode(ThemeMode.system);
-                  Get.back();
-                },
-              ),
-            ),
-
-            SizedBox(height: 10.h),
-          ],
+          ),
         ),
       ),
       isScrollControlled: true,

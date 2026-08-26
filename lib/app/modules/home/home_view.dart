@@ -708,257 +708,261 @@ class HomeView extends GetView<HomeController> {
     return FadeInUp(
       delay: Duration(milliseconds: 30 + (index * 20)),
       duration: const Duration(milliseconds: 200),
-      child: Container(
-        padding: EdgeInsets.all(12.r),
-        decoration: BoxDecoration(
-          color: cardBg,
-          borderRadius: BorderRadius.circular(16.r),
-          border: Border.all(
-            color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: (isDark ? Colors.black : Colors.grey.shade300).withAlpha(
-                30,
-              ),
-              blurRadius: 8,
-              offset: const Offset(0, 3),
+      child: GestureDetector(
+        onTap: () => controller.toggleTaskCompletion(task),
+        behavior: HitTestBehavior.opaque,
+        child: Container(
+          padding: EdgeInsets.all(12.r),
+          decoration: BoxDecoration(
+            color: cardBg,
+            borderRadius: BorderRadius.circular(16.r),
+            border: Border.all(
+              color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
             ),
-          ],
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Checkbox Button
-            Padding(
-              padding: EdgeInsets.only(top: 2.h),
-              child: GestureDetector(
-                onTap: () => controller.toggleTaskCompletion(task),
-                child: AnimatedContainer(
-                  duration: const Duration(milliseconds: 200),
-                  width: 22.r,
-                  height: 22.r,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: task.isCompleted
-                        ? AppColors.statusCompleted
-                        : Colors.transparent,
-                    border: Border.all(
+            boxShadow: [
+              BoxShadow(
+                color: (isDark ? Colors.black : Colors.grey.shade300).withAlpha(
+                  30,
+                ),
+                blurRadius: 8,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Checkbox Button
+              Padding(
+                padding: EdgeInsets.only(top: 2.h),
+                child: GestureDetector(
+                  onTap: () => controller.toggleTaskCompletion(task),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 200),
+                    width: 22.r,
+                    height: 22.r,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
                       color: task.isCompleted
                           ? AppColors.statusCompleted
-                          : (isDark
-                                ? AppColors.darkSecondaryText
-                                : AppColors.lightSecondaryText),
-                      width: 2,
+                          : Colors.transparent,
+                      border: Border.all(
+                        color: task.isCompleted
+                            ? AppColors.statusCompleted
+                            : (isDark
+                                  ? AppColors.darkSecondaryText
+                                  : AppColors.lightSecondaryText),
+                        width: 2,
+                      ),
                     ),
+                    child: task.isCompleted
+                        ? Icon(
+                            Icons.check_rounded,
+                            size: 15.r,
+                            color: Colors.white,
+                          )
+                        : null,
                   ),
-                  child: task.isCompleted
-                      ? Icon(
-                          Icons.check_rounded,
-                          size: 15.r,
-                          color: Colors.white,
-                        )
-                      : null,
                 ),
               ),
-            ),
 
-            SizedBox(width: 10.w),
+              SizedBox(width: 10.w),
 
-            // Task Info
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    task.title,
-                    style: task.isCompleted
-                        ? AppTextStyles.regular(
-                            fontSize: 14.sp,
-                            color: isDark
-                                ? AppColors.darkSecondaryText
-                                : AppColors.lightSecondaryText,
-                          ).copyWith(decoration: TextDecoration.lineThrough)
-                        : AppTextStyles.semiBold(
-                            fontSize: 14.sp,
-                            color: isDark
-                                ? AppColors.darkPrimaryText
-                                : AppColors.lightPrimaryText,
-                          ),
-                  ),
-                  if (task.description.isNotEmpty) ...[
-                    SizedBox(height: 3.h),
+              // Task Info
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      task.description,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.regular(
-                        fontSize: 11.5.sp,
-                        color: isDark
-                            ? AppColors.darkSecondaryText
-                            : AppColors.lightSecondaryText,
-                      ),
+                      task.title,
+                      style: task.isCompleted
+                          ? AppTextStyles.regular(
+                              fontSize: 14.sp,
+                              color: isDark
+                                  ? AppColors.darkSecondaryText
+                                  : AppColors.lightSecondaryText,
+                            ).copyWith(decoration: TextDecoration.lineThrough)
+                          : AppTextStyles.semiBold(
+                              fontSize: 14.sp,
+                              color: isDark
+                                  ? AppColors.darkPrimaryText
+                                  : AppColors.lightPrimaryText,
+                            ),
                     ),
-                  ],
-                  SizedBox(height: 8.h),
-                  // Responsive Wrap
-                  Wrap(
-                    alignment: WrapAlignment.spaceBetween,
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    runSpacing: 4.h,
-                    children: [
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          // Category Pill
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 7.w,
-                              vertical: 2.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: categoryColor.withAlpha(25),
-                              borderRadius: BorderRadius.circular(6.r),
-                            ),
-                            child: Text(
-                              lang?.getCategoryName(task.category) ??
-                                  task.category,
-                              style: AppTextStyles.medium(
-                                fontSize: 10.5.sp,
-                                color: categoryColor,
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: 5.w),
-
-                          // Priority Pill
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 7.w,
-                              vertical: 2.h,
-                            ),
-                            decoration: BoxDecoration(
-                              color: priorityColor.withAlpha(25),
-                              borderRadius: BorderRadius.circular(6.r),
-                            ),
-                            child: Text(
-                              lang?.getPriorityName(task.priority) ??
-                                  task.priority,
-                              style: AppTextStyles.medium(
-                                fontSize: 10.5.sp,
-                                color: priorityColor,
-                              ),
-                            ),
-                          ),
-                        ],
+                    if (task.description.isNotEmpty) ...[
+                      SizedBox(height: 3.h),
+                      Text(
+                        task.description,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyles.regular(
+                          fontSize: 11.5.sp,
+                          color: isDark
+                              ? AppColors.darkSecondaryText
+                              : AppColors.lightSecondaryText,
+                        ),
                       ),
+                    ],
+                    SizedBox(height: 8.h),
+                    // Responsive Wrap
+                    Wrap(
+                      alignment: WrapAlignment.spaceBetween,
+                      crossAxisAlignment: WrapCrossAlignment.center,
+                      runSpacing: 4.h,
+                      children: [
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            // Category Pill
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 7.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: categoryColor.withAlpha(25),
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              child: Text(
+                                lang?.getCategoryName(task.category) ??
+                                    task.category,
+                                style: AppTextStyles.medium(
+                                  fontSize: 10.5.sp,
+                                  color: categoryColor,
+                                ),
+                              ),
+                            ),
+                            SizedBox(width: 5.w),
 
-                      // Full Due Date & Time
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(
-                            Icons.access_time_rounded,
-                            size: 12.r,
-                            color: isDark
-                                ? AppColors.darkSecondaryText
-                                : AppColors.lightSecondaryText,
-                          ),
-                          SizedBox(width: 3.w),
-                          Text(
-                            DateFormat(
-                              'MMM dd, h:mm a',
-                              Get.locale?.languageCode ?? 'en',
-                            ).format(task.dueDate),
-                            style: AppTextStyles.medium(
-                              fontSize: 10.5.sp,
+                            // Priority Pill
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: 7.w,
+                                vertical: 2.h,
+                              ),
+                              decoration: BoxDecoration(
+                                color: priorityColor.withAlpha(25),
+                                borderRadius: BorderRadius.circular(6.r),
+                              ),
+                              child: Text(
+                                lang?.getPriorityName(task.priority) ??
+                                    task.priority,
+                                style: AppTextStyles.medium(
+                                  fontSize: 10.5.sp,
+                                  color: priorityColor,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        // Full Due Date & Time
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.access_time_rounded,
+                              size: 12.r,
                               color: isDark
                                   ? AppColors.darkSecondaryText
                                   : AppColors.lightSecondaryText,
                             ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                            SizedBox(width: 3.w),
+                            Text(
+                              DateFormat(
+                                'MMM dd, h:mm a',
+                                Get.locale?.languageCode ?? 'en',
+                              ).format(task.dueDate),
+                              style: AppTextStyles.medium(
+                                fontSize: 10.5.sp,
+                                color: isDark
+                                    ? AppColors.darkSecondaryText
+                                    : AppColors.lightSecondaryText,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
-            ),
 
-            SizedBox(width: 4.w),
+              SizedBox(width: 4.w),
 
-            // More Options Popup Menu (Edit & Delete)
-            PopupMenuButton<String>(
-              padding: EdgeInsets.zero,
-              constraints: const BoxConstraints(),
-              icon: Icon(
-                Icons.more_vert_rounded,
-                size: 18.r,
-                color: isDark
-                    ? AppColors.darkSecondaryText
-                    : AppColors.lightSecondaryText,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12.r),
-              ),
-              color: cardBg,
-              onSelected: (value) {
-                if (value == 'edit') {
-                  AddTaskBottomSheet.show(context, taskToEdit: task);
-                } else if (value == 'delete') {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    _showDeleteConfirmationDialog(context, task);
-                  });
-                }
-              },
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 'edit',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.edit_outlined,
-                        size: 16.r,
-                        color: isDark
-                            ? AppColors.darkPrimaryText
-                            : AppColors.lightPrimaryText,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        lang?.editTask ?? 'Edit Task',
-                        style: AppTextStyles.medium(
-                          fontSize: 13.sp,
+              // More Options Popup Menu (Edit & Delete)
+              PopupMenuButton<String>(
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(),
+                icon: Icon(
+                  Icons.more_vert_rounded,
+                  size: 18.r,
+                  color: isDark
+                      ? AppColors.darkSecondaryText
+                      : AppColors.lightSecondaryText,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                ),
+                color: cardBg,
+                onSelected: (value) {
+                  if (value == 'edit') {
+                    AddTaskBottomSheet.show(context, taskToEdit: task);
+                  } else if (value == 'delete') {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      _showDeleteConfirmationDialog(context, task);
+                    });
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.edit_outlined,
+                          size: 16.r,
                           color: isDark
                               ? AppColors.darkPrimaryText
                               : AppColors.lightPrimaryText,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 8.w),
+                        Text(
+                          lang?.editTask ?? 'Edit Task',
+                          style: AppTextStyles.medium(
+                            fontSize: 13.sp,
+                            color: isDark
+                                ? AppColors.darkPrimaryText
+                                : AppColors.lightPrimaryText,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-                PopupMenuItem(
-                  value: 'delete',
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.delete_outline_rounded,
-                        size: 16.r,
-                        color: AppColors.priorityHigh,
-                      ),
-                      SizedBox(width: 8.w),
-                      Text(
-                        lang?.deleteTask ?? 'Delete Task',
-                        style: AppTextStyles.medium(
-                          fontSize: 13.sp,
+                  PopupMenuItem(
+                    value: 'delete',
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.delete_outline_rounded,
+                          size: 16.r,
                           color: AppColors.priorityHigh,
                         ),
-                      ),
-                    ],
+                        SizedBox(width: 8.w),
+                        Text(
+                          lang?.deleteTask ?? 'Delete Task',
+                          style: AppTextStyles.medium(
+                            fontSize: 13.sp,
+                            color: AppColors.priorityHigh,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -42,35 +42,35 @@ class NotificationService {
       String timeZoneName = 'Asia/Kolkata';
       try {
         timeZoneName = await FlutterTimezone.getLocalTimezone();
-        if (timeZoneName == 'Asia/Calcutta' || timeZoneName == 'IST' || timeZoneName.contains('Calcutta')) {
+        if (timeZoneName == 'Asia/Calcutta' ||
+            timeZoneName == 'IST' ||
+            timeZoneName.contains('Calcutta') ||
+            timeZoneName.contains('Kolkata')) {
           timeZoneName = 'Asia/Kolkata';
         }
-        tz.setLocalLocation(tz.getLocation(timeZoneName));
-        debugPrint('[NotificationService] TimeZone location set to: $timeZoneName');
       } catch (e) {
-        debugPrint('[NotificationService] Warning: Location $timeZoneName not found in tz DB: $e');
-        final offset = DateTime.now().timeZoneOffset;
-        if (offset.inMinutes == 330) {
-          tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
+        debugPrint('[NotificationService] Error fetching local timezone string: $e');
+      }
+
+      try {
+        if (tz.timeZoneDatabase.locations.containsKey(timeZoneName)) {
+          tz.setLocalLocation(tz.getLocation(timeZoneName));
+          debugPrint('[NotificationService] TimeZone location set to: $timeZoneName');
         } else {
-          final locations = tz.timeZoneDatabase.locations;
-          tz.Location? matchedLoc;
-          for (var loc in locations.values) {
-            if (loc.currentTimeZone.offset == offset.inMilliseconds) {
-              matchedLoc = loc;
-              break;
-            }
-          }
-          tz.setLocalLocation(matchedLoc ?? tz.getLocation('Asia/Kolkata'));
+          _setFallbackTimeZone();
         }
+      } catch (e) {
+        debugPrint('[NotificationService] Warning: Location $timeZoneName setting failed: $e');
+        _setFallbackTimeZone();
       }
     } catch (e) {
       debugPrint('[NotificationService] Error setting local timezone: $e');
+      _setFallbackTimeZone();
     }
 
     // 2. Android & iOS Notification Settings
     const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@drawable/ic_notification_small');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
@@ -79,12 +79,9 @@ class NotificationService {
           requestSoundPermission: true,
         );
 
-    const InitializationSettings initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
+    await _notificationsPlugin.initialize(
+      InitializationSettings(android: androidSettings, iOS: iosSettings),
     );
-
-    await _notificationsPlugin.initialize(initSettings);
 
     // 3. Create High Importance Android Notification Channel & Request Permissions
     await _setupAndroidChannelAndPermissions();
@@ -147,7 +144,7 @@ class NotificationService {
 
       final AndroidNotificationChannel soundVibeChannel =
           AndroidNotificationChannel(
-            'task_reminder_channel_sound_vibe',
+            'task_reminder_channel_v3_sound_vibe',
             'Task Reminders (Sound & Vibration)',
             description: 'Notifications with sound and vibration alerts',
             importance: Importance.max,
@@ -158,7 +155,7 @@ class NotificationService {
 
       final AndroidNotificationChannel soundChannel =
           AndroidNotificationChannel(
-            'task_reminder_channel_sound',
+            'task_reminder_channel_v3_sound',
             'Task Reminders (Sound Only)',
             description: 'Notifications with sound alerts only',
             importance: Importance.max,
@@ -168,7 +165,7 @@ class NotificationService {
           );
 
       final AndroidNotificationChannel vibeChannel = AndroidNotificationChannel(
-        'task_reminder_channel_vibe',
+        'task_reminder_channel_v3_vibe',
         'Task Reminders (Vibration Only)',
         description: 'Notifications with vibration alerts only',
         importance: Importance.high,
@@ -179,7 +176,7 @@ class NotificationService {
 
       final AndroidNotificationChannel silentChannel =
           AndroidNotificationChannel(
-            'task_reminder_channel_silent',
+            'task_reminder_channel_v3_silent',
             'Task Reminders (Silent)',
             description:
                 'Silent notifications without sound or vibration alerts',
@@ -193,6 +190,33 @@ class NotificationService {
       await androidImplementation.createNotificationChannel(soundChannel);
       await androidImplementation.createNotificationChannel(vibeChannel);
       await androidImplementation.createNotificationChannel(silentChannel);
+    }
+  }
+
+  void _setFallbackTimeZone() {
+    try {
+      final offset = DateTime.now().timeZoneOffset;
+      if (offset.inMinutes == 330) {
+        tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
+        debugPrint('[NotificationService] Fallback TimeZone set to Asia/Kolkata (+05:30)');
+      } else {
+        tz.Location? matchedLoc;
+        for (var loc in tz.timeZoneDatabase.locations.values) {
+          try {
+            if (tz.TZDateTime.now(loc).timeZoneOffset == offset) {
+              matchedLoc = loc;
+              break;
+            }
+          } catch (_) {}
+        }
+        tz.setLocalLocation(matchedLoc ?? tz.getLocation('Asia/Kolkata'));
+        debugPrint('[NotificationService] Fallback TimeZone set to: ${tz.local.name}');
+      }
+    } catch (e) {
+      debugPrint('[NotificationService] Fallback TimeZone error: $e');
+      try {
+        tz.setLocalLocation(tz.getLocation('Asia/Kolkata'));
+      } catch (_) {}
     }
   }
 
@@ -216,14 +240,14 @@ class NotificationService {
     return false;
   }
 
-  NotificationDetails _notificationDetails() {
+  NotificationDetails _notificationDetails({String? icon}) {
     final String channelId = isSoundEnabled
         ? (isVibrationEnabled
-              ? 'task_reminder_channel_sound_vibe'
-              : 'task_reminder_channel_sound')
+              ? 'task_reminder_channel_v3_sound_vibe'
+              : 'task_reminder_channel_v3_sound')
         : (isVibrationEnabled
-              ? 'task_reminder_channel_vibe'
-              : 'task_reminder_channel_silent');
+              ? 'task_reminder_channel_v3_vibe'
+              : 'task_reminder_channel_v3_silent');
 
     final String channelName = isSoundEnabled
         ? (isVibrationEnabled
@@ -252,9 +276,9 @@ class NotificationService {
           playSound: isSoundEnabled,
           enableVibration: isVibrationEnabled,
           vibrationPattern: vibePattern,
-          icon: '@drawable/ic_notification_small',
+          icon: icon ?? '@mipmap/ic_launcher',
           largeIcon: const DrawableResourceAndroidBitmap(
-            '@drawable/ic_notification_large',
+            '@mipmap/ic_launcher',
           ),
           color: const Color(0xFF4F46E5),
         );
@@ -297,28 +321,29 @@ class NotificationService {
 
     final nowTz = tz.TZDateTime.now(tz.local);
 
-    // Do not trigger or schedule notification if due date/time is in the past
+    // If scheduled date is in the past, skip scheduling to prevent duplicate alerts on app restart
     if (!scheduledDate.isAfter(nowTz)) {
       debugPrint(
-        '[NotificationService] Skipping notification for past date task [$id] at $scheduledDate (now: $nowTz)',
+        '[NotificationService] Skipping past task notification [$id] scheduled for $scheduledDate (now: $nowTz)',
       );
       return;
     }
 
     try {
+      // 1. Try AlarmClock mode first (Highest priority system alarm mode on Android OS)
       await _notificationsPlugin.zonedSchedule(
         id,
         title,
         body,
         scheduledDate,
         _notificationDetails(),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        androidScheduleMode: AndroidScheduleMode.alarmClock,
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
       );
-      debugPrint('[NotificationService] Scheduled Exact Notification [$id] at $scheduledDate');
+      debugPrint('[NotificationService] Scheduled AlarmClock Notification [$id] at $scheduledDate');
     } catch (e) {
-      debugPrint('[NotificationService] Exact alarm scheduling error ($e). Retrying with inexact mode...');
+      debugPrint('[NotificationService] AlarmClock scheduling error ($e). Retrying with exactAllowWhileIdle mode...');
       try {
         await _notificationsPlugin.zonedSchedule(
           id,
@@ -326,13 +351,28 @@ class NotificationService {
           body,
           scheduledDate,
           _notificationDetails(),
-          androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+          androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
           uiLocalNotificationDateInterpretation:
               UILocalNotificationDateInterpretation.absoluteTime,
         );
-        debugPrint('[NotificationService] Scheduled Inexact Notification [$id] at $scheduledDate');
+        debugPrint('[NotificationService] Scheduled Exact Notification [$id] at $scheduledDate');
       } catch (err) {
-        debugPrint('[NotificationService] Error scheduling notification: $err');
+        debugPrint('[NotificationService] Exact scheduling error ($err). Retrying with inexact mode...');
+        try {
+          await _notificationsPlugin.zonedSchedule(
+            id,
+            title,
+            body,
+            scheduledDate,
+            _notificationDetails(),
+            androidScheduleMode: AndroidScheduleMode.inexactAllowWhileIdle,
+            uiLocalNotificationDateInterpretation:
+                UILocalNotificationDateInterpretation.absoluteTime,
+          );
+          debugPrint('[NotificationService] Scheduled Inexact Notification [$id] at $scheduledDate');
+        } catch (finalErr) {
+          debugPrint('[NotificationService] Error scheduling notification: $finalErr');
+        }
       }
     }
   }
@@ -345,12 +385,21 @@ class NotificationService {
       final int notificationId = (task.id.hashCode + 99) & 0x7FFFFFFF;
       final formattedTime = DateFormat('MMM dd, h:mm a').format(task.dueDate);
 
-      await _notificationsPlugin.show(
-        notificationId,
-        'Task Created Successfully!',
-        '"${task.title}" has been set for $formattedTime',
-        _notificationDetails(),
-      );
+      try {
+        await _notificationsPlugin.show(
+          notificationId,
+          'Task Created Successfully!',
+          '"${task.title}" has been set for $formattedTime',
+          _notificationDetails(),
+        );
+      } catch (_) {
+        await _notificationsPlugin.show(
+          notificationId,
+          'Task Created Successfully!',
+          '"${task.title}" has been set for $formattedTime',
+          _notificationDetails(icon: '@mipmap/ic_launcher'),
+        );
+      }
     } catch (e) {
       log('Error showing instant notification: $e');
     }
@@ -366,13 +415,38 @@ class NotificationService {
       final int idReminder = (task.id.hashCode & 0x7FFFFFFF);
       final int idExact = ((task.id.hashCode + 1) & 0x7FFFFFFF);
 
+      final DateTime effectiveDueDate = task.dueDate;
+
       await cancelTaskNotifications(task.id);
+
+      // Strict Future-Only Rule:
+      // A notification is scheduled ONLY if the due date is strictly in the future.
+      // Once a task due time has passed, scheduling is permanently skipped so it NEVER re-triggers!
+      if (!effectiveDueDate.isAfter(now)) {
+        debugPrint('[NotificationService] Task "${task.title}" due time ($effectiveDueDate) has passed. Skipping scheduling.');
+        return;
+      }
+
+      debugPrint('''
+==================== [NOTIFICATION SCHEDULING LOG] ====================
+Task ID: ${task.id}
+Task Title: ${task.title}
+Selected Task Due Date: ${task.dueDate}
+Effective Schedule Date: $effectiveDueDate
+Current Device Time: ${DateTime.now()}
+Device Timezone: ${tz.local.name}
+Converted TZDateTime: ${_toTZDateTime(effectiveDueDate)}
+Notification ID (Reminder): $idReminder
+Notification ID (Exact): $idExact
+Notifications Enabled: $isNotificationsEnabled
+======================================================================
+''');
 
       final formattedTime = DateFormat('h:mm a').format(task.dueDate);
 
       // A) Configurable Reminder (e.g. 5, 15, 30, 60 minutes before)
       if (reminderMinutes > 0) {
-        final reminderTime = task.dueDate.subtract(
+        final reminderTime = effectiveDueDate.subtract(
           Duration(minutes: reminderMinutes),
         );
         if (reminderTime.isAfter(now)) {
@@ -391,14 +465,12 @@ class NotificationService {
       }
 
       // B) Exact Due Time Notification
-      if (task.dueDate.add(const Duration(minutes: 1)).isAfter(now)) {
-        await _scheduleNotificationHelper(
-          id: idExact,
-          title: 'Task Due Now!',
-          body: '"${task.title}" is due right now ($formattedTime)',
-          scheduledDate: _toTZDateTime(task.dueDate),
-        );
-      }
+      await _scheduleNotificationHelper(
+        id: idExact,
+        title: 'Task Due Now!',
+        body: '"${task.title}" is due right now ($formattedTime)',
+        scheduledDate: _toTZDateTime(effectiveDueDate),
+      );
     } catch (e) {
       log('Error scheduling task notifications: $e');
     }
@@ -413,12 +485,22 @@ class NotificationService {
         HapticFeedback.heavyImpact();
       }
 
-      await _notificationsPlugin.show(
-        999999,
-        'Test Notification',
-        'Your notification settings are working perfectly!',
-        _notificationDetails(),
-      );
+      try {
+        await _notificationsPlugin.show(
+          999999,
+          'Test Notification',
+          'Your notification settings are working perfectly!',
+          _notificationDetails(),
+        );
+      } catch (e) {
+        debugPrint('[NotificationService] Primary icon failed, retrying with launcher icon: $e');
+        await _notificationsPlugin.show(
+          999999,
+          'Test Notification',
+          'Your notification settings are working perfectly!',
+          _notificationDetails(icon: '@mipmap/ic_launcher'),
+        );
+      }
       debugPrint('[NotificationService] Test notification show call completed!');
     } catch (e) {
       debugPrint('[NotificationService] Error sending test notification: $e');

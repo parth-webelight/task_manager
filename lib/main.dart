@@ -11,6 +11,8 @@ import 'app/core/themes/theme_controller.dart';
 import 'app/core/utils/session_manager.dart';
 import 'app/localizations/delegation.dart';
 
+import 'package:task_manager/app/core/widgets/connectivity_banner_overlay.dart';
+
 import 'package:task_manager/app/services/notification_service.dart';
 
 /// i push my code 07-08-26
@@ -114,7 +116,7 @@ class _MyAppState extends State<MyApp> {
                   data: MediaQuery.of(
                     context,
                   ).copyWith(textScaler: const TextScaler.linear(1.0)),
-                  child: child!,
+                  child: ConnectivityBannerOverlay(child: child!),
                 ),
               );
             },

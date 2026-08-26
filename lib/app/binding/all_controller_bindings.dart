@@ -8,9 +8,12 @@ import 'package:task_manager/app/modules/profile/profile_controller.dart';
 import 'package:task_manager/app/modules/signup/signup_controller.dart';
 import 'package:task_manager/app/modules/splash/splash_controller.dart';
 
+import 'package:task_manager/app/services/network_service.dart';
+
 class AllControllerBinding extends Bindings {
   @override
   void dependencies() {
+    Get.put<NetworkService>(NetworkService(), permanent: true);
     Get.put<AlertMessageUtils>(AlertMessageUtils(), permanent: true);
     Get.put<SplashController>(SplashController());
     Get.lazyPut<DashboardController>(() => DashboardController(), fenix: true);

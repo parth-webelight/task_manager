@@ -12,6 +12,8 @@ import 'package:task_manager/app/modules/home/home_controller.dart';
 import 'package:task_manager/app/services/auth_service.dart';
 import 'package:task_manager/app/services/notification_service.dart';
 import 'package:task_manager/app/services/task_service.dart';
+import 'package:task_manager/app/services/network_service.dart';
+import 'package:task_manager/app/modules/dashboard/dashboard_controller.dart';
 import 'package:task_manager/app/localizations/language.dart';
 
 class AddTaskBottomSheet extends StatefulWidget {
@@ -23,6 +25,7 @@ class AddTaskBottomSheet extends StatefulWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      useSafeArea: true,
       backgroundColor: Colors.transparent,
       builder: (_) => AddTaskBottomSheet(taskToEdit: taskToEdit),
     );
@@ -156,6 +159,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   }
 
   Future<void> _saveTask() async {
+    if (!NetworkService.checkOnlineOrShowAlert()) {
+      return;
+    }
+
     final title = _titleController.text.trim();
     final description = _descriptionController.text.trim();
     final alerts = Get.find<AlertMessageUtils>();
@@ -182,7 +189,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         userId = 'guest_user';
       }
 
-      final taskDueDate = DateTime(
+      DateTime taskDueDate = DateTime(
         _selectedDueDate.year,
         _selectedDueDate.month,
         _selectedDueDate.day,
@@ -190,7 +197,17 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         _selectedDueTime.minute,
       );
 
-      final bool isPastTime = taskDueDate.isBefore(DateTime.now().subtract(const Duration(minutes: 2)));
+      final now = DateTime.now();
+      if (taskDueDate.year == now.year &&
+          taskDueDate.month == now.month &&
+          taskDueDate.day == now.day &&
+          taskDueDate.hour == now.hour &&
+          taskDueDate.minute == now.minute &&
+          !taskDueDate.isAfter(now)) {
+        taskDueDate = now.add(const Duration(seconds: 5));
+      }
+
+      final bool isPastTime = taskDueDate.isBefore(now.subtract(const Duration(minutes: 2)));
       if (isPastTime) {
         alerts.showCustomSnackBar(
           message: 'Task date/time is in the past. Notifications will only fire for future tasks.',
@@ -239,6 +256,9 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
       if (mounted) {
         Navigator.pop(context);
+        if (Get.isRegistered<DashboardController>()) {
+          Get.find<DashboardController>().changeTabIndex(0);
+        }
       }
     } catch (e) {
       setState(() => _isLoading = false);
@@ -264,9 +284,11 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
         color: isDark ? AppColors.darkScaffoldBackground : AppColors.lightScaffoldBackground,
         borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
       ),
-      child: SingleChildScrollView(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
-        child: Column(
+      child: SafeArea(
+        top: false,
+        child: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -717,6 +739,7 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

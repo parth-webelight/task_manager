@@ -5,11 +5,16 @@ import 'package:task_manager/app/core/utils/alert_message_utils.dart';
 import 'package:task_manager/app/routes/app_pages.dart';
 import 'package:task_manager/app/services/auth_service.dart';
 
+import 'package:task_manager/app/services/network_service.dart';
+
 class ForgotPasswordController extends GetxController {
   final emailController = TextEditingController();
   final isLoading = false.obs;
 
   Future<void> sendResetLink() async {
+    if (!NetworkService.checkOnlineOrShowAlert()) {
+      return;
+    }
     final email = emailController.text.trim();
     final alerts = Get.find<AlertMessageUtils>();
 

@@ -7,6 +7,8 @@ import 'package:task_manager/app/services/auth_service.dart';
 
 import 'package:task_manager/app/modules/signup/email_verification_view.dart';
 
+import 'package:task_manager/app/services/network_service.dart';
+
 class SignupController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -20,6 +22,10 @@ class SignupController extends GetxController {
   }
 
   Future<void> signup() async {
+    if (!NetworkService.checkOnlineOrShowAlert()) {
+      return;
+    }
+
     final name = nameController.text.trim();
     final email = emailController.text.trim();
     final password = passwordController.text.trim();

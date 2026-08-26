@@ -108,7 +108,6 @@ class ProfileController extends GetxController {
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.all(20.r),
         decoration: BoxDecoration(
           color: isDark
               ? AppColors.darkCardBackground
@@ -118,72 +117,78 @@ class ProfileController extends GetxController {
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: Container(
-                width: 44.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: isDark
-                      ? AppColors.darkDivider
-                      : AppColors.lightDivider,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-            ),
-            SizedBox(height: 16.h),
-            Text(
-              'Change Profile Picture',
-              style: AppTextStyles.bold(
-                fontSize: 18.sp,
-                color: isDark
-                    ? AppColors.darkPrimaryText
-                    : AppColors.lightPrimaryText,
-              ),
-            ),
-            SizedBox(height: 6.h),
-            Text(
-              'Select an image source to update your profile photo',
-              style: AppTextStyles.regular(
-                fontSize: 13.sp,
-                color: isDark
-                    ? AppColors.darkSecondaryText
-                    : AppColors.lightSecondaryText,
-              ),
-            ),
-            SizedBox(height: 20.h),
-            Row(
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.all(20.r),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(
-                  child: _buildPickerOptionTile(
-                    isDark: isDark,
-                    icon: Icons.photo_library_rounded,
-                    title: 'Gallery',
-                    onTap: () {
-                      Get.back();
-                      pickAndUploadProfileImage(ImageSource.gallery);
-                    },
+                Center(
+                  child: Container(
+                    width: 44.w,
+                    height: 4.h,
+                    decoration: BoxDecoration(
+                      color: isDark
+                          ? AppColors.darkDivider
+                          : AppColors.lightDivider,
+                      borderRadius: BorderRadius.circular(2.r),
+                    ),
                   ),
                 ),
-                SizedBox(width: 14.w),
-                Expanded(
-                  child: _buildPickerOptionTile(
-                    isDark: isDark,
-                    icon: Icons.camera_alt_rounded,
-                    title: 'Camera',
-                    onTap: () {
-                      Get.back();
-                      pickAndUploadProfileImage(ImageSource.camera);
-                    },
+                SizedBox(height: 16.h),
+                Text(
+                  'Change Profile Picture',
+                  style: AppTextStyles.bold(
+                    fontSize: 18.sp,
+                    color: isDark
+                        ? AppColors.darkPrimaryText
+                        : AppColors.lightPrimaryText,
                   ),
                 ),
+                SizedBox(height: 6.h),
+                Text(
+                  'Select an image source to update your profile photo',
+                  style: AppTextStyles.regular(
+                    fontSize: 13.sp,
+                    color: isDark
+                        ? AppColors.darkSecondaryText
+                        : AppColors.lightSecondaryText,
+                  ),
+                ),
+                SizedBox(height: 20.h),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildPickerOptionTile(
+                        isDark: isDark,
+                        icon: Icons.photo_library_rounded,
+                        title: 'Gallery',
+                        onTap: () {
+                          Get.back();
+                          pickAndUploadProfileImage(ImageSource.gallery);
+                        },
+                      ),
+                    ),
+                    SizedBox(width: 14.w),
+                    Expanded(
+                      child: _buildPickerOptionTile(
+                        isDark: isDark,
+                        icon: Icons.camera_alt_rounded,
+                        title: 'Camera',
+                        onTap: () {
+                          Get.back();
+                          pickAndUploadProfileImage(ImageSource.camera);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 10.h),
               ],
             ),
-            SizedBox(height: 10.h),
-          ],
+          ),
         ),
       ),
     );
@@ -288,7 +293,6 @@ class ProfileController extends GetxController {
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: isDark
               ? AppColors.darkCardBackground
@@ -298,8 +302,11 @@ class ProfileController extends GetxController {
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
-        child: SingleChildScrollView(
-          child: Column(
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -464,8 +471,9 @@ class ProfileController extends GetxController {
           ),
         ),
       ),
-      isScrollControlled: true,
-    );
+    ),
+    isScrollControlled: true,
+  );
   }
 
   Widget _buildModeChip({
@@ -662,7 +670,6 @@ class ProfileController extends GetxController {
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: isDark
               ? AppColors.darkCardBackground
@@ -672,9 +679,12 @@ class ProfileController extends GetxController {
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -982,10 +992,9 @@ class ProfileController extends GetxController {
                 ),
               ),
 
-              /*
               SizedBox(height: 12.h),
 
-              // Test Notification Button
+             /* // Test Notification Button
               SizedBox(
                 width: double.infinity,
                 height: 44.h,
@@ -1008,14 +1017,14 @@ class ProfileController extends GetxController {
                   ),
                 ),
               ),
-              */
-              SizedBox(height: 10.h),
+              SizedBox(height: 10.h),*/
             ],
           ),
         ),
       ),
-      isScrollControlled: true,
-    );
+    ),
+    isScrollControlled: true,
+  );
   }
 
   /// Account Settings Options Bottom Sheet
@@ -1030,14 +1039,17 @@ class ProfileController extends GetxController {
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: isDark
               ? AppColors.darkScaffoldBackground
               : AppColors.lightScaffoldBackground,
           borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
         ),
-        child: Column(
+        child: SafeArea(
+          top: false,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -1173,9 +1185,12 @@ class ProfileController extends GetxController {
           ],
         ),
       ),
-      isScrollControlled: true,
-    );
+    ),
+    ),
+    isScrollControlled: true,
+  );
   }
+
 
   /// Show Dialog to Edit Name
   void showEditNameDialog() {
@@ -1820,7 +1835,6 @@ class ProfileController extends GetxController {
 
     Get.bottomSheet(
       Container(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
         decoration: BoxDecoration(
           color: isDark
               ? AppColors.darkCardBackground
@@ -1830,9 +1844,12 @@ class ProfileController extends GetxController {
             color: isDark ? AppColors.darkBorder : AppColors.lightBorder,
           ),
         ),
-        child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Column(
+        child: SafeArea(
+          top: false,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 20.h),
+            child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -1980,8 +1997,9 @@ class ProfileController extends GetxController {
           ),
         ),
       ),
-      isScrollControlled: true,
-    );
+    ),
+    isScrollControlled: true,
+  );
   }
 
   Widget _buildPrivacySummaryRow({
