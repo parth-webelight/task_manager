@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Privacy Policy - Task Manager App</title>
+  <meta name="description" content="Privacy Policy for Task Manager application. Learn how we handle your data, permissions, security, and user rights in compliance with Google Play Store policies." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Privacy Policy - Task Manager App" />
+  <meta property="og:description" content="Official Privacy Policy for Task Manager Android & Mobile Application." />
+  <meta property="og:type" content="website" />
+  
+  <!-- Google Fonts: Inter & Poppins -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ==================== DESIGN SYSTEM & VARIABLES ==================== */
+    :root {
+      /* Dark Theme (Default - Matches App Palette) */
+      --bg-gradient-start: #0F172A;
+      --bg-gradient-mid: #1E1B4B;
+      
+      --bg-gradient-end: #0F172A;
+      --card-bg: rgba(30, 41, 59, 0.7);
+      --card-border: rgba(255, 255, 255, 0.1);
+      --card-hover-border: rgba(99, 102, 241, 0.4);
+      --text-primary: #F8FAFC;
+      --text-secondary: #94A3B8;
+      --text-muted: #64748B;
+      --primary: #818CF8;
+      --primary-gradient: linear-gradient(135deg, #4F46E5 0%, #6366F1 50%, #818CF8 100%);
+      --accent: #34D399;
+      --warning: #FB923C;
+      --danger: #F87171;
+      --nav-bg: rgba(15, 23, 42, 0.85);
+      --badge-bg: rgba(79, 70, 229, 0.15);
+      --badge-text: #A5B4FC;
+      --badge-border: rgba(99, 102, 241, 0.3);
+      --code-bg: rgba(15, 23, 42, 0.6);
+      --box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+      --glow-shadow: 0 0 25px rgba(99, 102, 241, 0.25);
+    }
+
+    [data-theme="light"] {
+      /* Light Theme */
+      --bg-gradient-start: #F8FAFC;
+      --bg-gradient-mid: #EEF2FF;
+      --bg-gradient-end: #E0E7FF;
+      --card-bg: rgba(255, 255, 255, 0.85);
+      --card-border: rgba(209, 213, 219, 0.6);
+      --card-hover-border: rgba(79, 70, 229, 0.5);
+      --text-primary: #111827;
+      --text-secondary: #4B5563;
+      --text-muted: #6B7280;
+      --primary: #4F46E5;
+      --primary-gradient: linear-gradient(135deg, #4338CA 0%, #4F46E5 50%, #6366F1 100%);
+      --accent: #059669;
+      --warning: #EA580C;
+      --danger: #DC2626;
+      --nav-bg: rgba(248, 250, 252, 0.85);
+      --badge-bg: rgba(79, 70, 229, 0.1);
+      --badge-text: #4338CA;
+      --badge-border: rgba(79, 70, 229, 0.2);
+      --code-bg: rgba(241, 245, 249, 0.8);
+      --box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -4px rgba(0, 0, 0, 0.05);
+      --glow-shadow: 0 0 20px rgba(79, 70, 229, 0.15);
+    }
+
+    /* ==================== GLOBAL STYLES ==================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-start) 0%, var(--bg-gradient-mid) 50%, var(--bg-gradient-end) 100%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      line-height: 1.7;
+      min-height: 100vh;
+      transition: background 0.3s ease, color 0.3s ease;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Poppins', sans-serif;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+    }
+
+    a {
+      color: var(--primary);
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* ==================== HEADER & NAVBAR ==================== */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.25rem;
+      color: var(--text-primary);
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      background: var(--primary-gradient);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #FFF;
+      box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+      overflow: hidden;
+      flex-shrink: 0;
+      border: 1px solid var(--card-border);
+    }
+
+    .brand-logo-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .theme-toggle, .btn-secondary {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 9999px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    .theme-toggle:hover, .btn-secondary:hover {
+      border-color: var(--primary);
+      box-shadow: var(--glow-shadow);
+      transform: translateY(-1px);
+    }
+
+    /* ==================== HERO SECTION ==================== */
+    .hero {
+      max-width: 1100px;
+      margin: 3rem auto 2rem auto;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      border: 1px solid var(--badge-border);
+      padding: 0.4rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero h1 {
+      font-size: 2.75rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      background: var(--primary-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      max-width: 680px;
+      margin: 0 auto 1.5rem auto;
+    }
+
+    .meta-info {
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* ==================== MAIN CONTENT LAYOUT ==================== */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto 4rem auto;
+      padding: 0 1.5rem;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      gap: 2.5rem;
+    }
+
+    /* Sidebar Navigation */
+    .sidebar {
+      position: sticky;
+      top: 5.5rem;
+      height: fit-content;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: var(--box-shadow);
+    }
+
+    .sidebar h3 {
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      margin-bottom: 1rem;
+      padding-left: 0.5rem;
+    }
+
+    .toc-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    .toc-link {
+      display: block;
+      padding: 0.5rem 0.75rem;
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      font-weight: 500;
+    }
+
+    .toc-link:hover, .toc-link.active {
+      color: var(--primary);
+      background: var(--badge-bg);
+      text-decoration: none;
+      padding-left: 1rem;
+      border-left: 3px solid var(--primary);
+    }
+
+    /* Main Policy Content Cards */
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .section-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: var(--box-shadow);
+      transition: border-color 0.3s ease;
+    }
+
+    .section-card:hover {
+      border-color: var(--card-hover-border);
+    }
+
+    .section-card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .section-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 10px;
+      background: var(--badge-bg);
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+
+    .section-card p {
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+    }
+
+    .section-card ul {
+      margin-left: 1.25rem;
+      color: var(--text-secondary);
+      margin-bottom: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .section-card li strong {
+      color: var(--text-primary);
+    }
+
+    .permission-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin: 1.25rem 0;
+    }
+
+    .permission-box {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1rem;
+    }
+
+    .permission-box h4 {
+      font-size: 1rem;
+      color: var(--primary);
+      margin-bottom: 0.3rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .permission-box p {
+      font-size: 0.875rem;
+      margin-bottom: 0;
+      color: var(--text-secondary);
+    }
+
+    .third-party-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .tp-card {
+      background: var(--code-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .tp-card h4 {
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .tp-card p {
+      font-size: 0.8rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .tp-card a {
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .contact-box {
+      background: var(--badge-bg);
+      border: 1px solid var(--badge-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .contact-email {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      background: var(--nav-bg);
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--card-border);
+      padding: 2rem 1.5rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.875rem;
+    }
+
+    footer a {
+      color: var(--text-secondary);
+    }
+
+    /* ==================== RESPONSIVE MEDIA QUERIES ==================== */
+    @media (max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+      .sidebar {
+        display: none; /* Mobile navigation simplified */
+      }
+      .hero h1 {
+        font-size: 2rem;
+      }
+      .navbar {
+        padding: 0.85rem 1rem;
+      }
+    }
+
+    @media print {
+      body {
+        background: #FFF;
+        color: #000;
+      }
+      .navbar, .sidebar, .theme-toggle, footer {
+        display: none;
+      }
+      .section-card {
+        box-shadow: none;
+        border: 1px solid #CCC;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <img src="app_logo.png" alt="Task Manager Logo" class="brand-logo-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='block';" />
+        <svg style="display:none;" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="9 11 12 14 22 4"></polyline>
+          <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path>
+        </svg>
+      </div>
+      <span>Task Manager</span>
+    </div>
+    <div class="nav-actions">
+      <button class="theme-toggle" id="themeToggleBtn" aria-label="Toggle dark/light theme">
+        <span id="themeIcon">🌙</span>
+        <span id="themeLabel">Dark Mode</span>
+      </button>
+      <button class="btn-secondary" onclick="window.print()" aria-label="Print Privacy Policy">
+        🖨️ Print
+      </button>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero">
+    <div style="display: flex; justify-content: center; margin-bottom: 1.25rem;">
+      <img src="app_logo.png" alt="Task Manager App Icon" style="width: 76px; height: 76px; border-radius: 22px; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.45); border: 2px solid var(--card-border); object-fit: cover;" onerror="this.style.display='none';" />
+    </div>
+    <div class="badge">
+      <span>🛡️ Play Store Compliant</span>
+    </div>
+    <h1>Privacy Policy</h1>
+    <p>Your privacy is important to us. This policy outlines how the Task Manager application collects, uses, protects, and respects your personal information.</p>
+    
+    <div class="meta-info">
+      <div class="meta-item">
+        <span>📅 Effective Date:</span>
+        <strong>August 7, 2026</strong>
+      </div>
+      <div class="meta-item">
+        <span>📱 App Version:</span>
+        <strong>1.0.0</strong>
+      </div>
+      <div class="meta-item">
+        <span>⚡ Status:</span>
+        <strong style="color: var(--accent);">Active</strong>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN CONTAINER -->
+  <main class="container">
+    
+    <!-- SIDEBAR TABLE OF CONTENTS -->
+    <aside class="sidebar">
+      <h3>Quick Jump</h3>
+      <nav>
+        <ul class="toc-list">
+          <li><a href="#overview" class="toc-link">1. Overview</a></li>
+          <li><a href="#information-collection" class="toc-link">2. Data We Collect</a></li>
+          <li><a href="#permissions" class="toc-link">3. App Permissions</a></li>
+          <li><a href="#data-usage" class="toc-link">4. How Data is Used</a></li>
+          <li><a href="#third-party" class="toc-link">5. Third-Party Services</a></li>
+          <li><a href="#data-security" class="toc-link">6. Security & Storage</a></li>
+          <li><a href="#user-rights" class="toc-link">7. Your Data Rights</a></li>
+          <li><a href="#children" class="toc-link">8. Children's Privacy</a></li>
+          <li><a href="#contact" class="toc-link">9. Contact Us</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <!-- CONTENT SECTIONS -->
+    <div class="content">
+
+      <!-- 1. OVERVIEW -->
+      <section id="overview" class="section-card">
+        <h2>
+          <span class="section-icon">ℹ️</span>
+          1. Overview & Scope
+        </h2>
+        <p>This Privacy Policy applies to the <strong>Task Manager</strong> mobile application ("we", "our", or "us"). We are dedicated to maintaining the trust and confidence of our users by providing a secure task tracking and productivity environment.</p>
+        <p>By downloading, installing, or using the Task Manager app, you agree to the collection and use of information in accordance with this Privacy Policy. If you do not agree with any part of this policy, please do not use our application.</p>
+      </section>
+
+      <!-- 2. INFORMATION COLLECTION -->
+      <section id="information-collection" class="section-card">
+        <h2>
+          <span class="section-icon">📋</span>
+          2. Information We Collect
+        </h2>
+        <p>We only collect data necessary to provide you with seamless task management, cloud synchronization, and task reminder features:</p>
+        <ul>
+          <li><strong>Account Information:</strong> When you sign up or log in via Firebase Authentication, we collect basic details such as your Name, Email Address, and Profile Picture URL.</li>
+          <li><strong>Task Content & Data:</strong> Tasks, subtasks, task categories, due dates, priority levels, and completion status created by you are stored securely in local device storage (SQLite) and synced to Firebase Cloud Firestore.</li>
+          <li><strong>User Preferences:</strong> App settings such as active theme selection (Classic Indigo, Emerald Green, Sunset Orange), selected locale/language (English, Hindi, Gujarati), and notification settings.</li>
+          <li><strong>Technical & Diagnostics Data:</strong> Non-personally identifiable diagnostic info, such as device model, OS version, and crash logs to troubleshoot errors and maintain app stability.</li>
+        </ul>
+      </section>
+
+      <!-- 3. APP PERMISSIONS -->
+      <section id="permissions" class="section-card">
+        <h2>
+          <span class="section-icon">🔐</span>
+          3. Device Permissions & Usage
+        </h2>
+        <p>To deliver core capabilities, Task Manager requests explicit runtime permissions on your device. You can grant or revoke these permissions at any time via your device's System Settings:</p>
+        
+        <div class="permission-grid">
+          <div class="permission-box">
+            <h4>🔔 Notifications</h4>
+            <p>Used strictly to trigger timely alarm notifications and reminders for your scheduled tasks.</p>
+          </div>
+          <div class="permission-box">
+            <h4>🎤 Microphone & Audio</h4>
+            <p>Used when you interact with Speech-to-Text feature for AI voice task creation. Audio is processed on-device/system API.</p>
+          </div>
+          <div class="permission-box">
+            <h4>🖼️ Camera & Storage</h4>
+            <p>Used exclusively if you choose to select or capture a profile photo or attach images to tasks.</p>
+          </div>
+          <div class="permission-box">
+            <h4>⏰ Alarms & Reminders</h4>
+            <p>Required on Android 12+ (USE_EXACT_ALARM / SCHEDULE_EXACT_ALARM) to ensure precision for task due reminders.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. DATA USAGE -->
+      <section id="data-usage" class="section-card">
+        <h2>
+          <span class="section-icon">⚙️</span>
+          4. How We Use Your Information
+        </h2>
+        <p>Your data is used solely to power and enhance your task management experience. Specifically:</p>
+        <ul>
+          <li><strong>Core Functionality:</strong> Storing, editing, filtering, and organizing your daily tasks, projects, and reminders.</li>
+          <li><strong>Cloud Synchronization:</strong> Enabling multi-device sync and backup via secure Firebase Cloud Firestore.</li>
+          <li><strong>Smart Reminders:</strong> Triggering exact local notifications before task due dates.</li>
+          <li><strong>Personalization:</strong> Remembering your custom theme settings, category colors, and language preferences.</li>
+          <li><strong>Security & Authentication:</strong> Verifying user identity and protecting against unauthorized access.</li>
+        </ul>
+        <p style="margin-top: 1rem; color: var(--accent); font-weight: 500;">
+          🔒 <strong>We DO NOT sell, rent, or trade your personal data or task details to any third party or advertisers.</strong>
+        </p>
+      </section>
+
+      <!-- 5. THIRD PARTY SERVICES -->
+      <section id="third-party" class="section-card">
+        <h2>
+          <span class="section-icon">🌐</span>
+          5. Third-Party Services
+        </h2>
+        <p>The app integrates trusted Google & Firebase software development kits (SDKs) for authentication, storage, and app functionality. These third-party services operate under their respective privacy policies:</p>
+
+        <div class="third-party-list">
+          <div class="tp-card">
+            <div>
+              <h4>Google Play Services</h4>
+              <p>Provides essential core app infrastructure and Android device capabilities.</p>
+            </div>
+            <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google Privacy Policy →</a>
+          </div>
+
+          <div class="tp-card">
+            <div>
+              <h4>Firebase Authentication</h4>
+              <p>Manages user sign-in securely using standard encryption protocols.</p>
+            </div>
+            <a href="https://firebase.google.com/support/privacy" target="_blank" rel="noopener">Firebase Privacy Info →</a>
+          </div>
+
+          <div class="tp-card">
+            <div>
+              <h4>Firebase Cloud Firestore</h4>
+              <p>Provides encrypted cloud database synchronization for your task data.</p>
+            </div>
+            <a href="https://firebase.google.com/terms/data-processing-terms" target="_blank" rel="noopener">Data Terms →</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. DATA SECURITY & RETENTION -->
+      <section id="data-security" class="section-card">
+        <h2>
+          <span class="section-icon">🛡️</span>
+          6. Security & Data Retention
+        </h2>
+        <p>We prioritize the security of your data. We implement industry-standard encryption protocols (HTTPS/TLS) for data in transit and secure database storage mechanisms locally and in the cloud.</p>
+        <p><strong>Retention:</strong> Your data remains stored for as long as your account remains active. Local data is retained until you uninstall the application or clear app storage. Cloud data is retained until you delete your tasks or request account deletion.</p>
+      </section>
+
+      <!-- 7. YOUR DATA RIGHTS & DELETION -->
+      <section id="user-rights" class="section-card">
+        <h2>
+          <span class="section-icon">👤</span>
+          7. Your Rights & Data Deletion
+        </h2>
+        <p>You have full ownership and control over your personal data:</p>
+        <ul>
+          <li><strong>Access & Modify:</strong> You can edit or delete any task, subtask, category, or profile detail directly within the app at any time.</li>
+          <li><strong>Revoke Permissions:</strong> You can grant or revoke notification, camera, or microphone permissions at any time through your Android OS settings.</li>
+          <li><strong>Account & Data Deletion:</strong> If you wish to permanently delete your account and all associated cloud/local task records, you can submit a deletion request from the Profile screen or contact us at the support email below. All data will be permanently wiped within 30 days.</li>
+        </ul>
+      </section>
+
+      <!-- 8. CHILDREN'S PRIVACY -->
+      <section id="children" class="section-card">
+        <h2>
+          <span class="section-icon">👶</span>
+          8. Children's Privacy
+        </h2>
+        <p>Task Manager is designed for general productivity and is not directed towards children under the age of 13. We do not knowingly collect personal identifiable information from children under 13.</p>
+        <p>If you are a parent or guardian and become aware that your child has provided us with personal information without consent, please contact us immediately, and we will take immediate steps to remove such data from our servers.</p>
+      </section>
+
+      <!-- 9. CONTACT US -->
+      <section id="contact" class="section-card">
+        <h2>
+          <span class="section-icon">📬</span>
+          9. Changes & Contact Us
+        </h2>
+        <p>We may update our Privacy Policy periodically to reflect app updates or regulatory changes. We encourage you to review this page occasionally. Continued use of the application following any changes signifies your acceptance.</p>
+
+        <div class="contact-box">
+          <h3>Have questions about this Privacy Policy?</h3>
+          <p style="margin-top: 0.5rem; color: var(--text-secondary);">Feel free to reach out to our Developer Support team:</p>
+          <a href="mailto:meetmobiledev@gmail.com" class="contact-email">meetmobiledev@gmail.com</a>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>&copy; 2026 Task Manager App. All Rights Reserved. | Crafted with Privacy in Mind.</p>
+  </footer>
+
+  <!-- SCRIPT FOR INTERACTION & THEME TOGGLE -->
+  <script>
+    // Theme Toggle Logic
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeLabel = document.getElementById('themeLabel');
+    const htmlElem = document.documentElement;
+
+    // Check system preference or saved theme
+    const savedTheme = localStorage.getItem('pm_theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener('click', () => {
+      const currentTheme = htmlElem.getAttribute('data-theme');
+      const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      setTheme(newTheme);
+    });
+
+    function setTheme(theme) {
+      htmlElem.setAttribute('data-theme', theme);
+      localStorage.setItem('pm_theme', theme);
+      if (theme === 'dark') {
+        themeIcon.textContent = '🌙';
+        themeLabel.textContent = 'Dark Mode';
+      } else {
+        themeIcon.textContent = '☀️';
+        themeLabel.textContent = 'Light Mode';
+      }
+    }
+
+    // Active Sidebar Link Indicator on Scroll & Click
+    const sections = document.querySelectorAll('.section-card');
+    const navLinks = document.querySelectorAll('.toc-link');
+
+    function updateActiveLink() {
+      let current = '';
+      
+      // Check if user has scrolled to the bottom of the page
+      const isAtBottom = (window.innerHeight + window.scrollY) >= (document.documentElement.scrollHeight - 60);
+
+      if (isAtBottom && sections.length > 0) {
+        current = sections[sections.length - 1].getAttribute('id');
+      } else {
+        sections.forEach(section => {
+          const sectionTop = section.offsetTop;
+          if (window.scrollY >= (sectionTop - 150)) {
+            current = section.getAttribute('id');
+          }
+        });
+      }
+
+      navLinks.forEach(link => {
+        link.classList.remove('active');
+        if (link.getAttribute('href') === `#${current}`) {
+          link.classList.add('active');
+        }
+      });
+    }
+
+    window.addEventListener('scroll', updateActiveLink);
+    window.addEventListener('load', updateActiveLink);
+
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        navLinks.forEach(l => l.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>
