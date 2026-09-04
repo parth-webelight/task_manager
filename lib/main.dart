@@ -18,9 +18,7 @@ import 'package:task_manager/app/services/notification_service.dart';
 /// i push my code 07-08-26
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-  ]);
+  await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   try {
     await Firebase.initializeApp();
     debugPrint('Firebase Connected Successfully!');
