@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../main.dart';
 
 class SessionManager {
+  // ignore: non_constant_identifier_names
   static String auth_token = "auth_token";
   static String isLogin = "isLogin";
   static String isVerified = "isVerified";
@@ -179,6 +180,8 @@ class SessionManager {
 
   void changeLanguage(BuildContext context, String selectedLanguageCode) async {
     var locale = await setLocale(selectedLanguageCode);
-    MyApp.setLocale(context, locale);
+    if (context.mounted) {
+      MyApp.setLocale(context, locale);
+    }
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:get/get.dart';
 import 'package:task_manager/app/modules/Login/login_controller.dart';
 import 'package:task_manager/app/modules/Login/login_view.dart';

@@ -717,7 +717,7 @@ class ProfileController extends GetxController {
                       ),
                       Switch.adaptive(
                         value: tempNotificationsEnabled.value,
-                        activeColor: isDark
+                        activeTrackColor: isDark
                             ? AppColors.darkPrimary
                             : AppColors.lightPrimary,
                         onChanged: (val) {
@@ -847,7 +847,7 @@ class ProfileController extends GetxController {
                               ),
                               trailing: Switch.adaptive(
                                 value: tempSoundEnabled.value,
-                                activeColor: primaryColor,
+                                activeTrackColor: primaryColor,
                                 onChanged: (val) {
                                   tempSoundEnabled.value = val;
                                 },
@@ -879,7 +879,7 @@ class ProfileController extends GetxController {
                               ),
                               trailing: Switch.adaptive(
                                 value: tempVibrationEnabled.value,
-                                activeColor: primaryColor,
+                                activeTrackColor: primaryColor,
                                 onChanged: (val) {
                                   tempVibrationEnabled.value = val;
                                   if (val) {
