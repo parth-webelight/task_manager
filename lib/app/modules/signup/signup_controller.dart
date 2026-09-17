@@ -61,8 +61,7 @@ class SignupController extends GetxController {
     if (email.isEmpty || !AuthService.isValidStrictEmail(email)) {
       alerts.showErrorSnackBar(
         title: 'Invalid Email Address',
-        message:
-            'Email must be a valid @gmail.com address (e.g. user@gmail.com)',
+        message: 'Please enter a valid email address (e.g. user@example.com)',
       );
       return;
     }

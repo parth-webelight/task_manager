@@ -105,7 +105,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                     delay: const Duration(milliseconds: 200),
                     duration: const Duration(milliseconds: 600),
                     child: Text(
-                      'No worries! Enter your registered @gmail.com address below to receive a password reset link.',
+                      'No worries! Enter your registered email address below to receive a password reset link.',
                       textAlign: TextAlign.center,
                       style: AppTextStyles.regular(
                         fontSize: 14.sp,
@@ -137,7 +137,7 @@ class ForgotPasswordView extends GetView<ForgotPasswordController> {
                         SizedBox(height: 8.h),
                         CustomFillableTextField(
                           controller: controller.emailController,
-                          hint: 'Enter your registered @gmail.com',
+                          hint: 'Enter your registered email address',
                           icon: Icons.email_outlined,
                           isDark: isDark,
                           fillColor: fillColor,

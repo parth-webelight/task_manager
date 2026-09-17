@@ -15,8 +15,8 @@ class ForgotPasswordController extends GetxController {
 
     if (email.isEmpty || !AuthService.isValidStrictEmail(email)) {
       alerts.showErrorSnackBar(
-        title: 'Invalid Gmail Address',
-        message: 'Please enter a valid @gmail.com address (e.g. user@gmail.com)',
+        title: 'Invalid Email Address',
+        message: 'Please enter a valid email address (e.g. user@example.com)',
       );
       return;
     }

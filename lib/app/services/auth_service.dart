@@ -340,15 +340,20 @@ class AuthService {
     }
   }
 
-  /// Validate Email Address strictly (Must end with @gmail.com)
+  /// Validate Email Address (accepts all standard email formats, business emails, .com, .co.in, .co, etc.)
   static bool isValidStrictEmail(String email) {
-    final trimmed = email.trim().toLowerCase();
+    final trimmed = email.trim();
     if (trimmed.isEmpty) return false;
 
-    // Must end with @gmail.com and have a valid prefix
-    final gmailRegex = RegExp(r"^[a-zA-Z0-9._%+-]+@gmail\.com$");
-    return gmailRegex.hasMatch(trimmed);
+    // Standard valid email regex supporting multi-level domains (.com, .co.in, .co, etc.)
+    final emailRegex = RegExp(
+      r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
+    );
+    return emailRegex.hasMatch(trimmed);
   }
+
+  /// Alias for general email validation
+  static bool isValidEmail(String email) => isValidStrictEmail(email);
 
   /// Map Firebase Auth Exceptions to User Friendly Messages
   static String getReadableErrorMessage(dynamic error) {
